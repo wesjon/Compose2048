@@ -1,0 +1,2 @@
+rootProject.name = "Compose2048"
+include ':app'
