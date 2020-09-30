@@ -1,4 +1,4 @@
-package br.com.itau.compose2048.ui
+package br.com.itau.compose2048.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes
