@@ -3,6 +3,7 @@ package br.com.itau.compose2048.ui
 import androidx.compose.foundation.Box
 import androidx.compose.foundation.ContentGravity
 import androidx.compose.foundation.Text
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.RowScope.weight
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,15 +13,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.ui.tooling.preview.Preview
-import br.com.itau.compose2048.business.*
+import br.com.itau.compose2048.business.Direction
+import br.com.itau.compose2048.business.Game2048
+import br.com.itau.compose2048.theme.ProjectColors
+import br.com.itau.compose2048.theme.shapes
 
-@Preview
+//@Preview
 @Composable
 fun Board2048() {
     val game = remember { Game2048() }
@@ -28,13 +32,12 @@ fun Board2048() {
 
     Box(
         modifier = Modifier.fillMaxSize(),
-        backgroundColor = Color(0xFFA49381),
-        shape = RoundedCornerShape(4.dp),
-        gravity = ContentGravity.Center,
-        padding = 8.dp
+        padding = 16.dp
     ) {
 
         TopStatsPanel()
+
+        Spacer(modifier = Modifier.padding(top = 70.dp))
 
         Board(boardState.value)
 
@@ -62,8 +65,10 @@ fun Board2048() {
 fun Board(board: Array<IntArray>) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.padding(vertical = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.clip(shapes.large)
+            .background(color = ProjectColors.surface)
+            .padding(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         repeat(Game2048.BOARD_SIZE) { row ->
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -78,7 +83,7 @@ fun Board(board: Array<IntArray>) {
 @Composable
 fun Cell(num: Int) {
     Box(
-        backgroundColor = Color(0xFFCCCCCC),
+        backgroundColor = ProjectColors.piece,
         modifier = Modifier.weight(1f)
             .aspectRatio(1f),
         shape = RoundedCornerShape(4.dp),

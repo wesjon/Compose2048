@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 
 
 private val colorPallette = lightColors(
-    primary = amber,
-    background = background,
+    primary = ProjectColors.amber,
+    background = ProjectColors.background,
 )
 
 @Composable
