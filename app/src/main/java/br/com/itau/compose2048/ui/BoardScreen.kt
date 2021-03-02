@@ -1,17 +1,19 @@
 package br.com.itau.compose2048.ui
 
-import androidx.compose.foundation.Box
-import androidx.compose.foundation.ContentGravity
-import androidx.compose.foundation.Text
+
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.RowScope.weight
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.CombinedModifier
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -25,69 +27,87 @@ import br.com.itau.compose2048.theme.ProjectColors
 import br.com.itau.compose2048.theme.shapes
 
 //@Preview
+@ExperimentalFoundationApi
 @Composable
 fun Board2048() {
     val game = remember { Game2048() }
     val boardState = remember { mutableStateOf(game.board) }
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        padding = 16.dp
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
     ) {
 
         TopStatsPanel()
 
-        Spacer(modifier = Modifier.padding(top = 70.dp))
+        Spacer(modifier = Modifier.padding(top = 35.dp))
 
         Board(boardState.value)
 
-        ActionButton("Left") {
-            game.shift(Direction.LEFT)
-            boardState.value = game.board.copyOf()
-        }
-        ActionButton("Right") {
-            game.shift(Direction.RIGHT)
-            boardState.value = game.board.copyOf()
-        }
-        ActionButton("Top") {
-            game.shift(Direction.TOP)
-            boardState.value = game.board.copyOf()
-        }
-        ActionButton("Bottom") {
-            game.shift(Direction.BOTTOM)
-            boardState.value = game.board.copyOf()
-        }
-    }
-
-}
-
-@Composable
-fun Board(board: Array<IntArray>) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.clip(shapes.large)
-            .background(color = ProjectColors.surface)
-            .padding(12.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        repeat(Game2048.BOARD_SIZE) { row ->
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                repeat(Game2048.BOARD_SIZE) { col ->
-                    Cell(board[row][col])
-                }
+        val buttonsModifier = Modifier.weight(1f)
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.padding(top = 16.dp),
+        ) {
+            ActionButton("Left", buttonsModifier) {
+                game.shift(Direction.LEFT)
+                boardState.value = game.board.copyOf()
+            }
+            ActionButton("Right", buttonsModifier) {
+                game.shift(Direction.RIGHT)
+                boardState.value = game.board.copyOf()
             }
         }
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.padding(top = 4.dp),
+        ) {
+            ActionButton("Top", buttonsModifier) {
+                game.shift(Direction.TOP)
+                boardState.value = game.board.copyOf()
+            }
+            ActionButton("Bottom", buttonsModifier) {
+                game.shift(Direction.BOTTOM)
+                boardState.value = game.board.copyOf()
+            }
+        }
+
     }
+
+}
+
+@ExperimentalFoundationApi
+@Composable
+fun Board(board: Array<IntArray>) {
+    LazyVerticalGrid(cells = GridCells.Fixed(Game2048.BOARD_SIZE),
+        modifier = Modifier
+            .clip(shapes.large)
+            .background(color = ProjectColors.surface)
+            .padding(4.dp),
+        content = {
+            items(Game2048.BOARD_SIZE * Game2048.BOARD_SIZE) { index ->
+                val row = index / Game2048.BOARD_SIZE
+                val col = index % Game2048.BOARD_SIZE
+
+                Cell(board[row][col], Modifier.padding(4.dp))
+            }
+        })
 }
 
 @Composable
-fun Cell(num: Int) {
-    Box(
-        backgroundColor = ProjectColors.piece,
-        modifier = Modifier.weight(1f)
-            .aspectRatio(1f),
-        shape = RoundedCornerShape(4.dp),
-        gravity = ContentGravity.Center
+fun Cell(num: Int, modifier: Modifier) {
+    val bgColor = if (num > 0) ProjectColors.piece else ProjectColors.piece.copy(alpha = 0.5f)
+    Column(
+        modifier = CombinedModifier(
+            outer = modifier,
+            inner = Modifier
+                .background(bgColor, RoundedCornerShape(4.dp))
+                .aspectRatio(1f)
+        ),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         if (num > 0) {
             Text(
@@ -103,11 +123,10 @@ fun Cell(num: Int) {
 }
 
 @Composable
-fun ActionButton(text: String, action: () -> Unit) {
+fun ActionButton(text: String, modifier: Modifier, action: () -> Unit) {
     Button(
         onClick = { action.invoke() },
-        modifier = Modifier.preferredWidth(180.dp)
-            .padding(top = 8.dp, start = 8.dp, end = 8.dp)
+        modifier = modifier
     ) {
         Text(text)
     }
