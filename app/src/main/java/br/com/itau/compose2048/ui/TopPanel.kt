@@ -1,17 +1,15 @@
 package br.com.itau.compose2048.ui
 
-import androidx.compose.foundation.Box
-import androidx.compose.foundation.ContentGravity
-import androidx.compose.foundation.Text
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.RowScope.weight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.ui.tooling.preview.Preview
 import br.com.itau.compose2048.theme.ProjectColors
 import br.com.itau.compose2048.theme.shapes
 import br.com.itau.compose2048.theme.typography
@@ -24,11 +22,11 @@ fun TopStatsPanel() {
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Box(
-            shape = RoundedCornerShape(4.dp),
-            modifier = Modifier.fillMaxHeight()
-                .preferredSize(125.dp),
-            backgroundColor = ProjectColors.amber,
-            gravity = ContentGravity.Center
+            modifier = Modifier
+                .fillMaxHeight()
+                .background(ProjectColors.amber, RoundedCornerShape(4.dp))
+                .size(125.dp),
+            contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "2048",
@@ -48,8 +46,8 @@ fun TopStatsPanel() {
 
             Button(
                 onClick = {},
-                backgroundColor = ProjectColors.orangeLight,
                 modifier = Modifier.fillMaxSize(),
+//                colors =ButtonColors.
             ) {
                 Text(
                     "New".toUpperCase(),
@@ -63,12 +61,12 @@ fun TopStatsPanel() {
 @Composable
 fun HighlightCard(title: String, value: String) {
     Box(
-        shape = shapes.small,
-        modifier = Modifier.height(66.dp)
-            .weight(1f)
+        modifier = Modifier
+            .height(66.dp)
+            .background(ProjectColors.brown, shapes.small)
+//            .weight(1f)
             .fillMaxWidth(),
-        backgroundColor = ProjectColors.brown,
-        gravity = ContentGravity.Center
+        contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(title.toUpperCase(), style = typography.h2.copy(color = ProjectColors.white))
