@@ -50,7 +50,6 @@ fun Board2048() {
             boardState.value = game.board.copyOf()
         }
     }
-
 }
 
 @OptIn(ExperimentalFoundationApi::class)
