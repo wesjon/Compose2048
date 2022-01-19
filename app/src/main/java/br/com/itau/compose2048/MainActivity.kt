@@ -10,7 +10,7 @@ import br.com.itau.compose2048.theme.Compose2048Theme
 import br.com.itau.compose2048.ui.Board2048
 
 class MainActivity : ComponentActivity() {
-    @ExperimentalFoundationApi
+    @OptIn(ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

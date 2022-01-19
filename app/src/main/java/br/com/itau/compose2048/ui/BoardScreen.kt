@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.itau.compose2048.business.Direction
@@ -26,7 +27,7 @@ import br.com.itau.compose2048.business.Game2048
 import br.com.itau.compose2048.theme.ProjectColors
 import br.com.itau.compose2048.theme.shapes
 
-//@Preview
+@Preview
 @ExperimentalFoundationApi
 @Composable
 fun Board2048() {
@@ -37,63 +38,56 @@ fun Board2048() {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
         TopStatsPanel()
 
-        Spacer(modifier = Modifier.padding(top = 35.dp))
-
         Board(boardState.value)
 
-        val buttonsModifier = Modifier.weight(1f)
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier.padding(top = 16.dp),
-        ) {
-            ActionButton("Left", buttonsModifier) {
-                game.shift(Direction.LEFT)
-                boardState.value = game.board.copyOf()
-            }
-            ActionButton("Right", buttonsModifier) {
-                game.shift(Direction.RIGHT)
-                boardState.value = game.board.copyOf()
-            }
+        ActionsPannel { direction ->
+            game.shift(direction)
+            boardState.value = game.board.copyOf()
         }
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier.padding(top = 4.dp),
-        ) {
-            ActionButton("Top", buttonsModifier) {
-                game.shift(Direction.TOP)
-                boardState.value = game.board.copyOf()
-            }
-            ActionButton("Bottom", buttonsModifier) {
-                game.shift(Direction.BOTTOM)
-                boardState.value = game.board.copyOf()
-            }
-        }
-
     }
 
 }
 
-@ExperimentalFoundationApi
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Board(board: Array<IntArray>) {
-    LazyVerticalGrid(cells = GridCells.Fixed(Game2048.BOARD_SIZE),
-        modifier = Modifier
+fun Board(board: Array<IntArray>, modifier: Modifier = Modifier) {
+    LazyVerticalGrid(
+        cells = GridCells.Fixed(Game2048.BOARD_SIZE),
+        modifier = modifier
             .clip(shapes.large)
             .background(color = ProjectColors.surface)
             .padding(4.dp),
-        content = {
-            items(Game2048.BOARD_SIZE * Game2048.BOARD_SIZE) { index ->
-                val row = index / Game2048.BOARD_SIZE
-                val col = index % Game2048.BOARD_SIZE
+    ) {
+        items(Game2048.BOARD_SIZE * Game2048.BOARD_SIZE) { index ->
+            val row = index / Game2048.BOARD_SIZE
+            val col = index % Game2048.BOARD_SIZE
 
-                Cell(board[row][col], Modifier.padding(4.dp))
+            Cell(board[row][col], Modifier.padding(4.dp))
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun ActionsPannel(
+    onDirectionChanged: (Direction) -> Unit
+) {
+    LazyVerticalGrid(
+        cells = GridCells.Fixed(2),
+        horizontalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        items(Direction.values().size) { index ->
+            val item = Direction.values()[index]
+            ActionButton(item) { direction ->
+                onDirectionChanged(direction)
             }
-        })
+        }
+    }
 }
 
 @Composable
@@ -123,11 +117,13 @@ fun Cell(num: Int, modifier: Modifier) {
 }
 
 @Composable
-fun ActionButton(text: String, modifier: Modifier, action: () -> Unit) {
+fun ActionButton(
+    direction: Direction,
+    action: (Direction) -> Unit
+) {
     Button(
-        onClick = { action.invoke() },
-        modifier = modifier
+        onClick = { action.invoke(direction) }
     ) {
-        Text(text)
+        Text(direction.name)
     }
 }
