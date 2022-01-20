@@ -1,4 +1,4 @@
-package br.com.itau.compose2048
+package br.com.wesjon.compose2048
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -6,8 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Surface
-import br.com.itau.compose2048.theme.Compose2048Theme
-import br.com.itau.compose2048.ui.Board2048
+import br.com.wesjon.compose2048.theme.Compose2048Theme
+import br.com.wesjon.compose2048.ui.Board2048
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalFoundationApi::class)

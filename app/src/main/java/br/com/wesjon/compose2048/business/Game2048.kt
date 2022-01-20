@@ -1,4 +1,4 @@
-package br.com.itau.compose2048.business
+package br.com.wesjon.compose2048.business
 
 class Game2048 {
     val board = arrayOf(

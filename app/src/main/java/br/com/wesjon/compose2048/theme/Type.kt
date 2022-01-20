@@ -1,4 +1,4 @@
-package br.com.itau.compose2048.theme
+package br.com.wesjon.compose2048.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
